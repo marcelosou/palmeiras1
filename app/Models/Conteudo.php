@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Conteudo extends Model
 {
     protected $fillable = [
-        'titulo', 'slug', 'resumo', 'tipo',
+        'titulo', 'slug', 'resumo', 'imagem_capa', 'tipo',
         'status', 'autor_id', 'categoria', 'publicado_em',
     ];
 
@@ -30,5 +30,14 @@ class Conteudo extends Model
     public function scopePublicados($query)
     {
         return $query->where('status', 'publicado');
+    }
+    public function relacionadas()
+    {
+        return $this->belongsToMany(
+            Conteudo::class,
+            'conteudo_relacionados',
+            'conteudo_id',
+            'relacionado_id'
+        )->withPivot('ordem')->orderBy('conteudo_relacionados.ordem');
     }
 }
